@@ -33,6 +33,8 @@ install.packages("lme4")
 library(lme4)
 install.packages("lmerTest")
 library(lmerTest)
+install.packages("glmmTMB")
+library(glmmTMB) 
 
 
 
@@ -215,7 +217,7 @@ ggplot(data) + aes(x=club,y=average.rating) + geom_violin()
 
 
 
-### anpassning modell
+### anpassning modell med lmer()
 data <- na.omit(data)
 modell_full <- lmer(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name)+(1|opponent)+(1|club),data = data,REML = TRUE)
 modell_1 <- lmer(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+(1|name)+(1|opponent)+(1|club),data = data,REML = FALSE)
@@ -233,6 +235,28 @@ modell_12 <- lmer(average.rating ~ total.saves+save.+xg.prevented+player.of.the.
 modell_13 <- lmer(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name)+(1|club),data = data,REML = FALSE)
 modell_14 <- lmer(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|club)+(1|opponent),data = data,REML = FALSE)
 anova(modell_1,modell_2,modell_3,modell_4,modell_5,modell_6,modell_7,modell_8,modell_9,modell_10,modell_11,modell_12,modell_13,modell_14,modell_full)
+
+
+### anpassning modell med glmTMB()
+modell_full <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_1 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_2 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_3 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_4 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_5 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_6 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_7 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_8 <- glmmTMB(average.rating ~ total.saves+save.+(1|name)+(1|opponent)+(1|club),data = data,family = gaussian)
+modell_9 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name),data = data,family = gaussian)
+modell_10 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|opponent),data = data,family = gaussian)
+modell_11 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|club),data = data,family = gaussian)
+modell_12 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name)+(1|opponent),data = data,family = gaussian)
+modell_13 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|name)+(1|club),data = data,family = gaussian)
+modell_14 <- glmmTMB(average.rating ~ total.saves+save.+xg.prevented+player.of.the.match+clean.sheets+conceded+saves.parried+saves.held+saves.tipped+penalties.saved+xsave.+(1|club)+(1|opponent),data = data,family = gaussian)
+anova(modell_1,modell_2,modell_3,modell_4,modell_5,modell_6,modell_7,modell_8,modell_9,modell_10,modell_11,modell_12,modell_13,modell_14,modell_full)
+
+summary(modell_full)
+AIC(modell_full)
 
 
 
